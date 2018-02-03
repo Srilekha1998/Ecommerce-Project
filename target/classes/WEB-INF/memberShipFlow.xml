@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow.xsd">
+
+	<var name="register" class="com.sri.shoppingcart.model.RegisterDemo" />
+	<input name="id1" />
+	<!-- Executed when webFlow is triggered -->
+	<on-start>
+		<!-- demohandler is java class available through annotated Demohandler.java 
+			class.here we are calling it’s initFlow() method. -->
+		<evaluate expression="demohandler.initFlow()" result="register" />
+	</on-start>
+	<!--<var name="userBean" class=""/> -->
+
+	<!-- if not specified the first view state is the starting state -->
+	<view-state id="start" view="payment">
+		<transition on="ExistingAddress" to="validate" />
+	</view-state>
+
+	<action-state id="validate">
+		<evaluate expression="demohandler.validateDetails(register,messageContext)"></evaluate>
+		<transition on="success" to="confirmDetails" />
+		<transition on="failure" to="start" />
+	</action-state>
+
+	<view-state id="confirmDetails" view="listAddress" model="flowScope.register">
+		<transition on="Deliver" to="validate1" />
+
+	</view-state>
+
+	<action-state id="validate1">
+		<evaluate expression="demohandler.test()"></evaluate>
+		<transition on="success" to="done" />
+		<transition on="failure" to="confirmDetails" />
+	</action-state>
+
+	<view-state id="done" view="final" model="flowScope.address">
+		<transition on="Ok" to="done1" />
+	</view-state>
+
+	<end-state id="done1" view="index" />
+
+</flow>
